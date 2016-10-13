@@ -5,8 +5,6 @@ from player import *
 from items import *
 from gameparser import *
 
-
-
 def list_of_items(items):
     """This function takes a list of items (see items.py for the definition) and
     returns a comma-separated list of item names (as a string). For example:
@@ -226,7 +224,6 @@ def is_valid_exit(exits, chosen_exit):
     """
     return chosen_exit in exits
 
-
 def execute_go(direction):
     """This function, given the direction (e.g. "south") updates the current room
     to reflect the movement of the player if the direction is a valid exit
@@ -246,40 +243,32 @@ def execute_take(item_id):
     there is no such item in the room, this function prints
     "You cannot take that."
     """
-    current_mass = calculate_mass(inventory)
-    found = False
+    item_enters = False
+    
     for item in current_room["items"]:
-        if item["id"]== item_id:
-            found= True
-            itemtoadd=item
-            if (current_mass+itemtoadd["mass"])>3:
-                found = False
-                break
-    if found== True:
-        print("You took "+str(itemtoadd["id"])+".")
-        inventory.append(itemtoadd)
-        current_room["items"].remove(itemtoadd)
-    else:
-        print("You cannot take that")
-
-
+        if item_id == item["id"]:
+            item_enters = True
+            current_room["items"].remove(item)
+            inventory.append(item)
+            print(item["name"] + " added to the inventory"
+    if not item_enters:
+                  print("You cannot take this")
+                  
 def execute_drop(item_id):
     """This function takes an item_id as an argument and moves this item from the
     player's inventory to list of items in the current room. However, if there is
     no such item in the inventory, this function prints "You cannot drop that."
     """
-    found=False
+    item_exits = False
 
     for item in inventory:
         if item["id"]== item_id:
-            found= True
-            itemtodrop = item
-    if found== True:
-        print("You dropped "+str(itemtodrop["id"])+".")
-        current_room["items"].append(itemtodrop)
-        inventory.remove(itemtodrop)
-    else:
-        print("You cannot drop that")
+            item_exits = True
+            inventory.remove(item)
+            current_room["items"].append(item)
+            print(item["name"] + " removed from the inventory"
+    if not item_enters:
+        print("You cannot drop this")
     
 def execute_command(command):
     """This function takes a command (a list of words as returned by
